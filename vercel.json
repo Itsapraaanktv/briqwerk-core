@@ -1,14 +1,4 @@
 {
-  "rewrites": [
-    {
-      "source": "/assets/:path*",
-      "destination": "/assets/:path*"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)\\.js$",
@@ -27,6 +17,12 @@
           "value": "text/css; charset=utf-8"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!.*\\..*$).*)",
+      "destination": "/"
     }
   ]
 } 
