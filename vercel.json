@@ -1,28 +1,27 @@
 {
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/" }
+  ],
   "headers": [
     {
       "source": "/(.*)\\.js$",
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/javascript; charset=utf-8"
-        }
+        { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
       ]
     },
     {
       "source": "/(.*)\\.css$",
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/css; charset=utf-8"
-        }
+        { "key": "Content-Type", "value": "text/css; charset=utf-8" }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/((?!.*\\..*$).*)",
-      "destination": "/"
     }
   ]
 } 
