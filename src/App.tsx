@@ -8,23 +8,22 @@ import ForgotPasswordForm from '@/components/Auth/ForgotPasswordForm'
 import ResetPasswordForm from '@/components/Auth/ResetPasswordForm'
 import { Toaster } from '@/components/ui/toaster'
 import DocumentList from '@/components/PhotoDocumentation/DocumentList'
-import { usePhotoSync } from '@/components/PhotoDocumentation/hooks/usePhotoSync'
 import { usePhotoEntries } from '@/components/PhotoDocumentation/hooks/usePhotoEntries'
-import type { PhotoEntry } from '@/types/photo'
+import { usePhotoSync } from '@/components/PhotoDocumentation/hooks/usePhotoSync'
 
 // Temporärer Test-Code für Umgebungsvariablen
 console.log('SUPABASE_URL:', import.meta.env['VITE_SUPABASE_URL'])
 console.log('SUPABASE_ANON_KEY:', import.meta.env['VITE_SUPABASE_ANON_KEY'])
 
 function App() {
-  // View mode state
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  // View-Mode-State
+  const [viewMode, setViewMode] = useState<'grid'|'list'>('grid')
 
-  // Photo entries management
+  // Foto-Einträge verwalten
   const { entries, updateEntry, deleteEntry } = usePhotoEntries()
 
-  // Photo sync management
-  const { isSyncing, lastSync, sync } = usePhotoSync(entries, updateEntry)
+  // Sync-Hook: übergib entries und updateEntry
+  const { isSyncing, lastSync, sync: onSync } = usePhotoSync(entries, updateEntry)
 
   return (
     <AuthProvider>
@@ -42,7 +41,7 @@ function App() {
             path="/photos"
             element={
               <ProtectedRoute>
-                <DocumentList 
+                <DocumentList
                   entries={entries}
                   onDelete={deleteEntry}
                   onUpdate={updateEntry}
@@ -50,7 +49,7 @@ function App() {
                   setViewMode={setViewMode}
                   isSyncing={isSyncing}
                   lastSync={lastSync}
-                  onSync={sync}
+                  onSync={onSync}
                 />
               </ProtectedRoute>
             }
