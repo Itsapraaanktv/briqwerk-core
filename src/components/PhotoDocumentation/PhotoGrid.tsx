@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { MapPin, Calendar, AlertCircle } from "lucide-react";
 import PhotoLightbox from "./PhotoLightbox";
+import { ExportPanel } from './ExportPanel';
 
 interface PhotoEntry {
   id: string;
@@ -77,6 +78,11 @@ export default function PhotoGrid() {
         entry={selectedEntry} 
         onClose={() => setSelectedEntry(null)} 
       />
+
+      {/* Export Panel */}
+      <div className="mt-8">
+        <ExportPanel />
+      </div>
     </>
   );
 } 

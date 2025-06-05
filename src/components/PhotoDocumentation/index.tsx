@@ -28,4 +28,5 @@ export default function PhotoDocumentation() {
 
 export { default as PhotoUploadForm } from './PhotoUploadForm';
 export { default as DocumentList } from './DocumentList';
-export type { PhotoEntry } from './types'; 
+export type { PhotoEntry } from './types';
+export * from './ExportPanel'; 
