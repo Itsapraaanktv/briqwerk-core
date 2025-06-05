@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Eye, EyeOff } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 import { cn } from '@/lib/utils'
 
@@ -23,7 +23,8 @@ interface FormErrors {
 export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [rememberMe, setRememberMe] = useState(true) // Standardmäßig aktiviert
+  const [rememberMe, setRememberMe] = useState(true)
+  const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
   const [serverError, setServerError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -34,7 +35,6 @@ export default function LoginForm() {
   const location = useLocation()
   const state = location.state as LocationState
   
-  // Refs für Fokusmanagement
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
   const errorRef = useRef<HTMLDivElement>(null)
@@ -123,7 +123,7 @@ export default function LoginForm() {
       }
 
       // Erfolgreiche Anmeldung
-      const from = state?.from?.pathname || '/'
+      const from = state?.from?.pathname || '/photos'
       navigate(from, { replace: true })
     } catch (error: any) {
       // Spezifische Fehlermeldungen
@@ -153,20 +153,30 @@ export default function LoginForm() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
+        {/* Logo and App Name */}
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <img
+            src="/logo.svg"
+            alt="BriqWerk Core Logo"
+            className="h-16 w-auto"
+          />
+          <h1 className="text-2xl font-bold text-gray-900">BriqWerk Core</h1>
+        </div>
+
+        {/* Welcome Text */}
         <div className="text-center">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-            Willkommen zurück
-          </h1>
+          <h2 className="text-xl font-semibold text-gray-800">
+            Willkommen
+          </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Melden Sie sich in Ihrem Account an
+            Bitte melde dich an:
           </p>
         </div>
 
         <form 
           onSubmit={handleSubmit} 
-          className="mt-8 space-y-6"
+          className="mt-8 space-y-6 bg-white rounded-lg shadow-sm p-6 border border-gray-200"
           noValidate
-          aria-label="Anmeldeformular"
         >
           {serverError && (
             <Alert 
@@ -174,15 +184,14 @@ export default function LoginForm() {
               ref={errorRef}
               tabIndex={-1}
               role="alert"
-              aria-live="assertive"
             >
-              <AlertDescription id="server-error">{serverError}</AlertDescription>
+              <AlertDescription>{serverError}</AlertDescription>
             </Alert>
           )}
 
-          <div className="space-y-4 rounded-md shadow-sm">
+          <div className="space-y-4">
             <div>
-              <Label htmlFor="email" className="block">
+              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
                 E-Mail
               </Label>
               <Input
@@ -196,52 +205,54 @@ export default function LoginForm() {
                 onChange={(e) => handleFieldChange(e, setEmail)}
                 disabled={isLoading}
                 className={cn(
-                  "mt-1",
+                  "mt-1 h-12 rounded-lg",
                   errors.email && isDirty && "border-destructive focus-visible:ring-destructive"
                 )}
                 placeholder="max@beispiel.de"
-                aria-describedby={errors.email ? 'email-error' : undefined}
                 aria-invalid={!!(errors.email && isDirty)}
               />
               {errors.email && isDirty && (
-                <p 
-                  id="email-error" 
-                  className="mt-1 text-sm text-destructive"
-                  role="alert"
-                >
+                <p className="mt-1 text-sm text-destructive" role="alert">
                   {errors.email}
                 </p>
               )}
             </div>
 
             <div>
-              <Label htmlFor="password" className="block">
+              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
                 Passwort
               </Label>
-              <Input
-                ref={passwordRef}
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => handleFieldChange(e, setPassword)}
-                disabled={isLoading}
-                className={cn(
-                  "mt-1",
-                  errors.password && isDirty && "border-destructive focus-visible:ring-destructive"
-                )}
-                minLength={6}
-                aria-describedby={errors.password ? 'password-error' : undefined}
-                aria-invalid={!!(errors.password && isDirty)}
-              />
-              {errors.password && isDirty && (
-                <p 
-                  id="password-error" 
-                  className="mt-1 text-sm text-destructive"
-                  role="alert"
+              <div className="relative">
+                <Input
+                  ref={passwordRef}
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  required
+                  value={password}
+                  onChange={(e) => handleFieldChange(e, setPassword)}
+                  disabled={isLoading}
+                  className={cn(
+                    "mt-1 h-12 rounded-lg pr-10",
+                    errors.password && isDirty && "border-destructive focus-visible:ring-destructive"
+                  )}
+                  aria-invalid={!!(errors.password && isDirty)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
+              {errors.password && isDirty && (
+                <p className="mt-1 text-sm text-destructive" role="alert">
                   {errors.password}
                 </p>
               )}
@@ -255,18 +266,17 @@ export default function LoginForm() {
                 checked={rememberMe}
                 onCheckedChange={(checked: boolean) => setRememberMe(checked)}
                 disabled={isLoading}
-                aria-label="Angemeldet bleiben"
               />
               <Label
                 htmlFor="remember-me"
-                className="text-sm text-gray-900 select-none"
+                className="text-sm text-gray-700"
               >
                 Angemeldet bleiben
               </Label>
             </div>
             <Link
               to="/forgot-password"
-              className="text-sm font-medium text-primary hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="text-sm font-medium text-primary hover:text-primary/80"
             >
               Passwort vergessen?
             </Link>
@@ -275,13 +285,12 @@ export default function LoginForm() {
           <div className="space-y-4">
             <Button
               type="submit"
-              className="w-full"
+              className="w-full h-12 text-base font-medium"
               disabled={isLoading}
-              aria-disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Anmeldung...
                 </>
               ) : (
@@ -293,9 +302,9 @@ export default function LoginForm() {
               Noch kein Konto?{' '}
               <Link
                 to="/register"
-                className="font-medium text-primary hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="font-medium text-primary hover:text-primary/80"
               >
-                Jetzt registrieren
+                Registrieren
               </Link>
             </p>
           </div>

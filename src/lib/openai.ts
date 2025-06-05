@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 
 // Initialisiere den OpenAI Client
 const openai = new OpenAI({
-  apiKey: process.env['REACT_APP_OPENAI_API_KEY'],
+  apiKey: import.meta.env['VITE_OPENAI_API_KEY'],
   dangerouslyAllowBrowser: true // Nur für Entwicklung, in Produktion sollte dies über einen Backend-Service laufen
 });
 

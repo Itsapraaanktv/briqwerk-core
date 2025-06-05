@@ -89,8 +89,9 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000
   },
   server: {
-    port: 5179,       // fixed port
-    strictPort: true, // error if port 5179 is taken
+    port: 5179,
+    host: true,        // Listen on all addresses
+    strictPort: false, // Try next available port if 5179 is taken
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
@@ -98,5 +99,8 @@ export default defineConfig({
         secure: false,
       },
     },
+    watch: {
+      usePolling: true // Use polling for file changes
+    }
   }
 })
