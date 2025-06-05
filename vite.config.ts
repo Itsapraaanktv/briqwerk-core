@@ -1,7 +1,12 @@
+/// <reference types="vite/client" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
+import * as path from 'node:path'
+import * as url from 'node:url'
 import { VitePWA } from 'vite-plugin-pwa'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -73,6 +78,21 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src')
     }
   },
+  server: {
+    port: 5179,
+    strictPort: true, // Prevent automatic port switching
+    host: true,        // Listen on all addresses
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+    watch: {
+      usePolling: true // Use polling for file changes
+    }
+  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -87,20 +107,5 @@ export default defineConfig({
       }
     },
     chunkSizeWarningLimit: 1000
-  },
-  server: {
-    port: 5179,
-    host: true,        // Listen on all addresses
-    strictPort: false, // Try next available port if 5179 is taken
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
-    watch: {
-      usePolling: true // Use polling for file changes
-    }
   }
 })

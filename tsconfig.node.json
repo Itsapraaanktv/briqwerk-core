@@ -1,18 +1,24 @@
 {
   "compilerOptions": {
+    /* Build Configuration */
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
-    "lib": ["ES2023"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
+    /* Module Resolution */
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "emitDeclarationOnly": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node"],
 
     /* Type Checking */
     "strict": true,
@@ -20,16 +26,23 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    
-    /* Additional Safety Rules */
-    "exactOptionalPropertyTypes": true,    // Stricter handling of optional properties
-    "noUncheckedIndexedAccess": true,     // Safer array/object access
-    "noImplicitOverride": true,           // Require explicit override keyword
-    "noPropertyAccessFromIndexSignature": true, // Prevent accidental property access
-    "allowUnusedLabels": false,           // Catch unused labels
-    "allowUnreachableCode": false,        // Catch unreachable code
-    "checkJs": true,                      // Type check JS files
-    "forceConsistentCasingInFileNames": true // Ensure consistent file casing
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "checkJs": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "vite.config.ts",
+    "src/env.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "dist"
+  ]
 }
