@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import 'leaflet/dist/leaflet.css'
-import { registerServiceWorker } from './pwa'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -11,4 +10,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>,
 )
 
-registerServiceWorker()
+// Temporarily disabled to clear cache issues
+// import { registerServiceWorker } from './pwa'
+// registerServiceWorker()
